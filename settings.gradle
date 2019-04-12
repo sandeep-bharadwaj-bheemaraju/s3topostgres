@@ -4,3 +4,5 @@ pluginManagement {
 	}
 }
 rootProject.name = 's3topostgres'
+include 's3tolambda'
+
