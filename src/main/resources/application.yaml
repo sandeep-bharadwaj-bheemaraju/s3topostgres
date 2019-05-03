@@ -4,11 +4,11 @@ spring:
   application:
     name: s3-to-postgres
   datasource:
-    url: "jdbc:postgresql://hostname:portnumber/db-instance-identifier"     #Postgres DB JDBC URL
-    username: "master-username"                                             #Postgres DB Username
-    password: "master-password"                                             #Postgres DB Password
+    url: "jdbc:postgresql://<<DB Endpoint>>:<<portnumber>>/<<Database Name>>"     #Postgres DB JDBC URL
+    username: "master-username"                                                   #Postgres DB Username
+    password: "master-password"                                                   #Postgres DB Password
     hikari:
-      maximumPoolSize: 5                                                    #Postgres DB Connection Pool size
+      maximumPoolSize: 5                                                          #Postgres DB Connection Pool size
 
 server:
   port: 7070
@@ -18,7 +18,7 @@ server:
 s3topostgres:
   sqs:
     notification:
-      queue: S3-Notifier-Lambda-Queue
+      queue: <<SQS Queue Name>>
 
 logging:
   file: /home/ec2-user/s3-to-postgres/s3-to-postgres.log

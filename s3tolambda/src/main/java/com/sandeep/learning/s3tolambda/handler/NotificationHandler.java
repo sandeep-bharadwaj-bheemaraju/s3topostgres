@@ -1,30 +1,46 @@
 package com.sandeep.learning.s3tolambda.handler;
 
-import com.amazonaws.regions.Regions;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
+import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClientBuilder;
+import com.amazonaws.services.dynamodbv2.document.DynamoDB;
+import com.amazonaws.services.dynamodbv2.document.Item;
+import com.amazonaws.services.dynamodbv2.document.Table;
 import com.amazonaws.services.lambda.runtime.Context;
 import com.amazonaws.services.lambda.runtime.RequestHandler;
 import com.amazonaws.services.lambda.runtime.events.S3Event;
 import com.amazonaws.services.sqs.AmazonSQS;
 import com.amazonaws.services.sqs.AmazonSQSClientBuilder;
+import com.amazonaws.services.sqs.model.GetQueueUrlResult;
 import com.sandeep.learning.s3tolambda.dto.Message;
 
 public class NotificationHandler implements RequestHandler<S3Event, String> {
 
 	private AmazonSQS sqsClient;
 
-	private String queueUrl = "https://sqs.ap-southeast-2.amazonaws.com/924564549370/S3-Notifier-Lambda-Queue";
+	private AmazonDynamoDB amazonDynamoDB;
+
+	private DynamoDB dynamoDB;
+
 
 	public NotificationHandler() {
 
-		sqsClient = AmazonSQSClientBuilder.standard()
-				.withRegion(Regions.AP_SOUTHEAST_2)
-				.build();
+		sqsClient = AmazonSQSClientBuilder.standard().build();
+
+		amazonDynamoDB = AmazonDynamoDBClientBuilder.standard().build();
+
+		dynamoDB = new DynamoDB(amazonDynamoDB);
 
 	}
 
 
 	@Override
 	public String handleRequest(S3Event event, Context context) {
+
+		Table table = dynamoDB.getTable("configuration");
+		Item item = table.getItem("KEY", "notification.queue");
+		String queueName = item.getString("VALUE");
+
+		context.getLogger().log("Sending message to queue : " +queueName);
 
 		// Get the object from the event and fetch bucketName and fileName
 		String bucketName   = event.getRecords().get(0).getS3().getBucket().getName();
@@ -39,7 +55,9 @@ public class NotificationHandler implements RequestHandler<S3Event, String> {
 
 		String notification = message.toString();
 
-		sqsClient.sendMessage(queueUrl, notification);
+		final GetQueueUrlResult queueUrl = sqsClient.getQueueUrl(queueName);
+
+		sqsClient.sendMessage(queueUrl.getQueueUrl(), notification);
 
 		context.getLogger().log("Message sent to SQS queue is   : " +notification);
 
