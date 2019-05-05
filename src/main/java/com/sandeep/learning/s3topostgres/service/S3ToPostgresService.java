@@ -35,6 +35,9 @@ public class S3ToPostgresService {
 	@Value("${spring.datasource.password}")
 	private String dbPassword;
 
+	@Value("${s3topostgres.db.query}")
+	private String query;
+
 	public void processFile(Message notification){
 
 		long rowsInserted = 0;
@@ -45,10 +48,7 @@ public class S3ToPostgresService {
 
 			InputStream inputStream = s3Object.getObjectContent();
 
-			rowsInserted = new CopyManager((BaseConnection) connection).copyIn(
-					"COPY employees (employee_id, first_name, last_name, title, email)"
-					+"FROM STDIN (FORMAT CSV)", inputStream
-			);
+			rowsInserted = new CopyManager((BaseConnection) connection).copyIn(query, inputStream);
 
 			LOG.info("Inserted records count {}", rowsInserted);
 

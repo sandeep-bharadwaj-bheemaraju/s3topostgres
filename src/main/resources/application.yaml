@@ -19,6 +19,8 @@ s3topostgres:
   sqs:
     notification:
       queue: <<SQS Queue Name>>
+  db:
+    query: COPY employees (employee_id, first_name, last_name, title, email) FROM STDIN (FORMAT CSV)
 
 logging:
   file: /home/ec2-user/s3-to-postgres/s3-to-postgres.log
