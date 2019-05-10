@@ -9,7 +9,7 @@ Currently, the focus is primarily on migrating data using CSV or Delimited file.
 
 *S3toPostgres* Migrate data from legacy system to AWS
 
-![S3toPostgres](https://github.com/sandeep-bharadwaj-bheemaraju/s3topostgres/dashboard/web/img/s3topostgres.png)
+![S3toPostgres](https://github.com/sandeep-bharadwaj-bheemaraju/s3topostgres/blob/master/dashboard/web/img/s3topostgres.png)
 
 # Solution Design
 
