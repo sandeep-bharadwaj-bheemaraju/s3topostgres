@@ -1,7 +1,7 @@
 
-# S3toPostgres - A Data migration solution from onprem to AWS RDS 
+# S3toPostgres - Loads data from S3 bucket to Postgres database 
 
-*S3toPostgres* provides an easy-and-fastway to migrate your data to AWS Cloud applications.
+*S3toPostgres* is a data migration solution from onprem to RDS and provides an easy-and-fastway to migrate your data to AWS Cloud applications.
 
 Currently, the focus is primarily on migrating data using CSV or Delimited file.
 
